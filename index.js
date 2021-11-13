@@ -24,16 +24,17 @@ async function run() {
       const productCollection = database.collection("products");
       const orderCollection = database.collection("orders");
       const userCollection = database.collection("users");
+      const reviewCollection = database.collection("reviews");
   
   
-      // GET API
+      // GET API Porducts
       app.get("/products", async (req, res) => {
         const cursor =  productCollection.find({});
         const products = await cursor.toArray();
         res.send( products);
       });
 
-      // POST API
+      // POST API Porducts
     app.post("/products", async (req, res) => {
         const newUser = req.body;
         console.log("got new user ", req.body);
@@ -43,7 +44,7 @@ async function run() {
       });
   
 
-    //   // GET single services
+    //   // GET single Porducts
       app.get("/products/:id", async (req, res) => {
         const id = req.params.id;
         console.log("getting specific service", id);
@@ -52,7 +53,7 @@ async function run() {
         res.json(product);
       });
   
-    //  Add orders
+    //  POST orders
       app.post("/orders", async (req, res) => {
         const order = req.body;
         const result = await orderCollection.insertOne(order);
@@ -66,7 +67,8 @@ async function run() {
           const result = await order.toArray();
           res.send(result)
       })
-
+  
+  //  GET Orders Email 
   app.get("/orders/:email", async (req, res) => {
         const myOrder = await orderCollection
           .find({
@@ -84,7 +86,7 @@ async function run() {
     //     res.json(result);
     //   });
   
-    // delete order api
+    // Delete order api
       app.delete("/deleteOrders/:id", async (req, res) => {
         const id = req.params.id;
         const result = await orderCollection.deleteOne({
@@ -114,7 +116,7 @@ async function run() {
         console.log("user", user);
         res.json(result);
       });
-
+      
       app.put('/users', async (req, res) => {
         const user = req.body;
         console.log('put', user);
@@ -133,7 +135,23 @@ async function run() {
         const result = await userCollection.updateOne(filter, updateDoc);
         res.json(result);
     })
-
+   
+    //  POST Review
+     app.post("/reviews", async (req, res) => {
+        const newReview = req.body;
+        console.log("got new reviews", req.body);
+        const result = await  reviewCollection.insertOne(newReview);
+        console.log("added review", result);
+        res.send(result);
+      });
+     
+       app.get("/reviews", async (req, res) => {
+        const cursor =  reviewCollection.find({});
+        const review = await cursor.toArray();
+        res.send( review);
+       });
+     
+    
 
     } finally {
       //  await client.close();
